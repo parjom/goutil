@@ -2,6 +2,7 @@ package goutil
 
 import (
 	"strings"
+	"encoding/json"
 )
 
 func JsonGetValue(obj interface{}, key string) interface{} {
@@ -29,6 +30,10 @@ func JsonSetValue(obj interface{}, key string, value interface{}) bool {
 				localObj.(map[string]interface{})[keys[i]] = value
 				return true
 			} else {
+				// 없는 해시키맵을 만들어서 넣어야 한다.
+				if (localObj.(map[string]interface{})[keys[i]] == nil) {
+					localObj.(map[string]interface{})[keys[i]] = make(map[string]interface{})
+				}
 				localObj = localObj.(map[string]interface{})[keys[i]]
 			}
 		default:
@@ -36,4 +41,17 @@ func JsonSetValue(obj interface{}, key string, value interface{}) bool {
 		}
 	}
 	return false
+}
+
+func JsonNewObject() interface{} {
+	return make(map[string]interface{})
+}
+
+func JsonEncoding(jsonString string) (interface{}, error) {
+	var u interface{}
+	err := json.Unmarshal([]byte(jsonString), &u)
+	if (err != nil) {
+		return nil, err
+	}
+	return u, nil
 }
