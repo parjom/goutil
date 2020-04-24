@@ -17,3 +17,23 @@ func JsonGetValue(obj interface{}, key string) interface{} {
 	}
 	return localObj
 }
+
+func JsonSetValue(obj interface{}, key string, value interface{}) bool {
+	keys := strings.Split(key, ".")
+	var localObj interface{} = obj
+	e:=len(keys)
+	for i := 0; i < e; i++ {
+		switch localObj.(type) {
+		case map[string]interface{}:
+			if i == (e-1) {
+				localObj.(map[string]interface{})[keys[i]] = value
+				return true
+			} else {
+				localObj = localObj.(map[string]interface{})[keys[i]]
+			}
+		default:
+			localObj = nil
+		}
+	}
+	return false
+}
