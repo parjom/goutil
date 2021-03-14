@@ -7,7 +7,19 @@ import (
 )
 
 func TestSetValue(t *testing.T)  {
-	s := `{"name":"gopher","age":{"name":"gopher","age":{"name":"gopher","age":7}}}`
+	s := `
+	{
+		"name": "gopher",
+		"age": {
+			"name": "gopher",
+			"age": {
+				"name": "gopher",
+				"age": 7
+			}
+		},
+		"array": [1, 2, 3, 4, 5]
+	}
+	`
 
 	ss := `
 	{
@@ -37,7 +49,30 @@ func TestSetValue(t *testing.T)  {
 
 
 func TestGetValue(t *testing.T)  {
-	s := `{"name":"gopher","age":{"name":"gopher","age":{"name":"gopher","age":7}}}`
+	s := `
+	{
+		"name": "gopher",
+		"age": {
+			"name": "gopher",
+			"age": {
+				"name": "gopher",
+				"age": 7
+			},
+			"array": [
+				{
+					"name": "test1"
+				},
+				{
+					"name": "test2"
+				},
+				{
+					"name": "test3"
+				}
+			]
+		},
+		"array": [1, 2, 3, 4, 5]
+	}
+	`
 
 	var u interface{}
 	json.Unmarshal([]byte(s), &u)
@@ -46,8 +81,13 @@ func TestGetValue(t *testing.T)  {
 
 	fmt.Printf("%+v\n", JsonGetValue(u, "name")) // {Name:gopher Age:7}
 
-	fmt.Printf("%+v\n", JsonGetValue(u, "name.age")) // {Name:gopher Age:7}
+	fmt.Printf("%+v\n", JsonGetValue(u, "age.name")) // {Name:gopher Age:7}
 
-	fmt.Printf("%+v\n", JsonGetValue(u, "name.age.age")) // {Name:gopher Age:7}
+	fmt.Printf("%+v\n", JsonGetValue(u, "age.age.age")) // {Name:gopher Age:7}
 
+	fmt.Printf("%+v\n", JsonGetValue(u, "array[1]")) // {Name:gopher Age:7}
+
+	fmt.Printf("%+v\n", JsonGetValue(u, "age.array[1]")) // {Name:gopher Age:7}
+	fmt.Printf("%+v\n", JsonGetValue(u, "age.array[0].name")) // {Name:gopher Age:7}
+	fmt.Printf("%+v\n", JsonGetValue(u, "age.array[2].name")) // {Name:gopher Age:7}
 }
