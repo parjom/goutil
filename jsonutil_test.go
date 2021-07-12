@@ -98,3 +98,35 @@ func TestGetValue(t *testing.T)  {
 	// 데이터가 없을경우 기본값을 반환하는 펑션 테스트
 	fmt.Printf("%+v\n", JsonGetValueDefault(u, "array[5]", "test"))
 }
+
+func TestCheckNulls(t *testing.T)  {
+	s := `
+	{
+		"name": "gopher",
+		"age": {
+			"name": "gopher",
+			"age": {
+				"name": "gopher",
+				"age": 7
+			},
+			"array": [
+				{
+					"name": "test1"
+				},
+				{
+					"name": "test2"
+				},
+				{
+					"name": "test3"
+				}
+			]
+		},
+		"array": [1, 2, 3, 4, 5]
+	}
+	`
+	var u interface{}
+	json.Unmarshal([]byte(s), &u)
+
+	fmt.Printf("Normal Case : %+v\n", CheckNulls(u, []string{"name", "age", "age.name", "array[3]"}))
+	fmt.Printf("Abnormal Case : %+v\n", CheckNulls(u, []string{"name.age", "age", "age.name", "array[7]"}))
+}
