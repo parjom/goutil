@@ -7,6 +7,19 @@ import (
 	"encoding/json"
 )
 
+func CheckNulls(data interface{}, keys []string) error {
+    var nullKeys []string = []string{}
+    for _, key := range keys {
+        if JsonGetValue(data, key) == nil {
+            nullKeys = append(nullKeys, key)
+        }
+    }
+    if len(nullKeys) > 0 {
+        return errors.New("miss parameter is [ " + strings.Join(nullKeys, ", ") + " ]" )
+    }
+    return nil
+}
+
 func JsonGetValueDefault(obj interface{}, key string, defaultValue interface{}) interface{} {
 	value := JsonGetValue(obj, key)
 	if value == nil {
