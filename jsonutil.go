@@ -7,6 +7,14 @@ import (
 	"encoding/json"
 )
 
+func JsonGetValueDefault(obj interface{}, key string, defaultValue interface{}) interface{} {
+	value := JsonGetValue(obj, key)
+	if value == nil {
+		return defaultValue
+	}
+	return value
+}
+
 func JsonGetValue(obj interface{}, key string) interface{} {
 	keys := strings.Split(key, ".")
 	var localObj interface{} = obj
@@ -36,14 +44,14 @@ func JsonGetValue(obj interface{}, key string) interface{} {
 }
 func checkArray(key string) (string, int, error) {
 	if len(key) == 0 {
-		return "", 0, errors.New("Invaild Key") 
+		return "", 0, errors.New("Invaild Key")
 	}
 	if string(key[len(key)-1]) == "]" {
 		e:=len(key)-1
 		for i:=0; i<e; i++ {
 			if string(key[i]) == "[" {
 				if i==0 || i+1 == e { //  key의 패턴이 [...] 이거나 ...[] 인경우, 에러 반환
-					return "", 0, errors.New("Invaild Key") 
+					return "", 0, errors.New("Invaild Key")
 				} else  {
 					retKey := key[0:i]
 					retIndex, err := strconv.Atoi(key[i+1:e])
@@ -55,8 +63,8 @@ func checkArray(key string) (string, int, error) {
 				}
 			}
 		}
-		return "", 0, errors.New("Invaild Key") 
-	} 
+		return "", 0, errors.New("Invaild Key")
+	}
 	// 문자열이 ] 으로 끝나지 않는다면, 배열키가 아니라고 생각하고 반환함
 	return key, -1, nil
 }

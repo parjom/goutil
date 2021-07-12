@@ -77,17 +77,24 @@ func TestGetValue(t *testing.T)  {
 	var u interface{}
 	json.Unmarshal([]byte(s), &u)
 
-	fmt.Printf("%+v\n", JsonGetValue(u, "age")) // {Name:gopher Age:7}
+	// 키 호출 테스트
+	fmt.Printf("%+v\n", JsonGetValue(u, "age"))
+	fmt.Printf("%+v\n", JsonGetValue(u, "name"))
 
-	fmt.Printf("%+v\n", JsonGetValue(u, "name")) // {Name:gopher Age:7}
+	// 키 조합 호출테스트
+	fmt.Printf("%+v\n", JsonGetValue(u, "age.name"))
+	fmt.Printf("%+v\n", JsonGetValue(u, "age.age.age"))
 
-	fmt.Printf("%+v\n", JsonGetValue(u, "age.name")) // {Name:gopher Age:7}
+	// 배열 인덱스 호출테스트
+	fmt.Printf("%+v\n", JsonGetValue(u, "array[1]"))
+	fmt.Printf("%+v\n", JsonGetValue(u, "age.array[1]"))
+	fmt.Printf("%+v\n", JsonGetValue(u, "age.array[0].name"))
+	fmt.Printf("%+v\n", JsonGetValue(u, "age.array[2].name"))
 
-	fmt.Printf("%+v\n", JsonGetValue(u, "age.age.age")) // {Name:gopher Age:7}
+	// 배열 인덱스를 벗어난 호출
+	fmt.Printf("%+v\n", JsonGetValue(u, "age.array[3].name"))
+	fmt.Printf("%+v\n", JsonGetValue(u, "array[5]"))
 
-	fmt.Printf("%+v\n", JsonGetValue(u, "array[1]")) // {Name:gopher Age:7}
-
-	fmt.Printf("%+v\n", JsonGetValue(u, "age.array[1]")) // {Name:gopher Age:7}
-	fmt.Printf("%+v\n", JsonGetValue(u, "age.array[0].name")) // {Name:gopher Age:7}
-	fmt.Printf("%+v\n", JsonGetValue(u, "age.array[2].name")) // {Name:gopher Age:7}
+	// 데이터가 없을경우 기본값을 반환하는 펑션 테스트
+	fmt.Printf("%+v\n", JsonGetValueDefault(u, "array[5]", "test"))
 }
