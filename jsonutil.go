@@ -41,12 +41,21 @@ func JsonGetValue(obj interface{}, key string) interface{} {
 			if idx == -1 {
 				localObj = v[k]
 			} else {
-				tmpObj := v[k2].([]interface{})
-				if len(tmpObj) <= idx {
-					// 인덱스 값보다 데이터 수가 적은경우
+				if v[k2] == nil {
 					localObj = nil
 				} else {
-					localObj = tmpObj[idx]
+					switch v[k2].(type) {
+					case []interface{}:
+						tmpObj := v[k2].([]interface{})
+						if len(tmpObj) <= idx {
+							// 인덱스 값보다 데이터 수가 적은경우
+							localObj = nil
+						} else {
+							localObj = tmpObj[idx]
+						}
+					default:
+						localObj = nil
+					}
 				}
 			}
 		default:

@@ -127,6 +127,14 @@ func TestGetValue(t *testing.T) {
 	if res != nil {
 		t.Error(`fail to 존재하지 않는 키 호출 테스트3 - JsonGetValue(src,"array[5]")`)
 	}
+	res = JsonGetValue(src, "age.age[1]")
+	if res != nil {
+		t.Error(`fail to 키가 존재하더라도 배열이 아닌 키에 배열 호출 테스트4 - JsonGetValue(src,"array[5]")`)
+	}
+	res = JsonGetValue(src, "age.tttt[1]")
+	if res != nil {
+		t.Error(`fail to 존재하지 않는 키의 배열 호출 테스트5 - JsonGetValue(src,"array[5]")`)
+	}
 
 	// 데이터가 없을경우 기본값을 반환하는 펑션 테스트
 	res = JsonGetValueDefault(src, "array[5]", "test")
